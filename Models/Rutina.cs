@@ -15,7 +15,7 @@ namespace GestionEntrenamientoDeportivo.Models
         public string? PublicId { get; set; }
         public string? Url { get; set; }
         public string? SecureUrl { get; set; }
-        public int UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
         public Usuario? Usuario { get; set; }
 
         [JsonIgnore]

@@ -136,3 +136,11 @@ F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDepor
 F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\obj\Debug\net8.0\GestionEntrenamientoDeportivo.pdb
 F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\obj\Debug\net8.0\GestionEntrenamientoDeportivo.genruntimeconfig.cache
 F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\obj\Debug\net8.0\ref\GestionEntrenamientoDeportivo.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+F:\Programas\C#\Proyecto\GestionEntrenamientoDeportivo\GestionEntrenamientoDeportivo\obj\Debug\net8.0\GestionEntrenamientoDeportivo.sourcelink.json

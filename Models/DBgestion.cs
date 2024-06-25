@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace GestionEntrenamientoDeportivo.Models
 {
-    public class DBgestion : DbContext
+    public class DBgestion : IdentityDbContext<Usuario>
     {
         public DBgestion(DbContextOptions<DBgestion> options) : base(options) { }
         public DbSet<Usuario> Usuarios { get; set; }
