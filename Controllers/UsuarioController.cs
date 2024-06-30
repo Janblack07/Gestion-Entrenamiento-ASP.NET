@@ -43,6 +43,9 @@ namespace GestionEntrenamientoDeportivo.Controllers
 
                 if (result.Succeeded)
                 {
+                    // Asignar el rol "Usuario" por defecto
+                    await _userManager.AddToRoleAsync(user, "Usuario");
+
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     var token = GenerateJwtToken(user);
                     return Ok(new { message = "Se registró un Usuario exitosamente", token });
@@ -53,6 +56,7 @@ namespace GestionEntrenamientoDeportivo.Controllers
 
             return BadRequest(new { message = "Datos no válidos", errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
         }
+
 
         [HttpPost]
         [Route("Login")]
@@ -65,10 +69,10 @@ namespace GestionEntrenamientoDeportivo.Controllers
                 return Ok(new { message = "Inicio de sesión exitoso", token });
             }
 
-            return Unauthorized(new { message = "Contraseña o Usuario Invalido" });
+            return Unauthorized(new { message = "Contraseña o Usuario Inválido" });
         }
 
-        
+
         private string GenerateJwtToken(Usuario user)
         {
             

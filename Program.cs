@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,30 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
+    {
+        Name="Authorization",
+        Description= "Enter the Bearer Authorization : `Bearer Genreated-JWT-Token`",
+        In= ParameterLocation.Header,
+        Type= SecuritySchemeType.ApiKey,
+        Scheme= "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = JwtBearerDefaults.AuthenticationScheme
+            }
+        },
+        new string[] {}
+    }});
+
+});
 
 // Configurar EF Core con SQL Server
 builder.Services.AddDbContext<DBgestion>(options =>
@@ -74,5 +98,51 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+// Crear roles y usuario admin
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<Usuario>>();
+    var configuration = services.GetRequiredService<IConfiguration>();
+    await CreateRolesAndAdmin(roleManager, userManager, configuration);
+}
 
 app.Run();
+// Método para crear roles y usuario admin
+static async Task CreateRolesAndAdmin(RoleManager<IdentityRole> roleManager, UserManager<Usuario> userManager, IConfiguration configuration)
+{
+    string[] roleNames = { "Admin", "Usuario" };
+
+    foreach (var roleName in roleNames)
+    {
+        var roleExist = await roleManager.RoleExistsAsync(roleName);
+        if (!roleExist)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+
+    // Crear el usuario admin si no existe
+    var adminEmail = configuration["AdminUser:Email"];
+    var adminPassword = configuration["AdminUser:Password"];
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var user = new Usuario
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            Nombre = "Admin",
+            Apellido = "Admin",
+            Edad = 30 // Puedes ajustar la edad según lo necesites
+        };
+
+        var result = await userManager.CreateAsync(user, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(user, "Admin");
+        }
+    }
+}
