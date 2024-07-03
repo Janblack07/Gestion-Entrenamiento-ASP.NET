@@ -211,7 +211,7 @@ namespace GestionEntrenamientoDeportivo.Migrations
                     VideoPublicId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VideoSecureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RutinaId = table.Column<int>(type: "int", nullable: true)
+                    RutinaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -220,7 +220,8 @@ namespace GestionEntrenamientoDeportivo.Migrations
                         name: "FK_Ejercicios_Rutinas_RutinaId",
                         column: x => x.RutinaId,
                         principalTable: "Rutinas",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,8 +276,7 @@ namespace GestionEntrenamientoDeportivo.Migrations
                         name: "FK_RegistrosProgreso_Ejercicios_EjercicioId",
                         column: x => x.EjercicioId,
                         principalTable: "Ejercicios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

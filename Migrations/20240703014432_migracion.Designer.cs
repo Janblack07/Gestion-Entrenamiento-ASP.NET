@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionEntrenamientoDeportivo.Migrations
 {
     [DbContext(typeof(DBgestion))]
-    [Migration("20240625224351_migracion")]
+    [Migration("20240703014432_migracion")]
     partial class migracion
     {
         /// <inheritdoc />
@@ -83,7 +83,7 @@ namespace GestionEntrenamientoDeportivo.Migrations
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RutinaId")
+                    b.Property<int>("RutinaId")
                         .HasColumnType("int");
 
                     b.Property<string>("SecureUrl")
@@ -414,17 +414,21 @@ namespace GestionEntrenamientoDeportivo.Migrations
 
             modelBuilder.Entity("GestionEntrenamientoDeportivo.Models.Ejercicio", b =>
                 {
-                    b.HasOne("GestionEntrenamientoDeportivo.Models.Rutina", null)
+                    b.HasOne("GestionEntrenamientoDeportivo.Models.Rutina", "Rutina")
                         .WithMany("Ejercicios")
-                        .HasForeignKey("RutinaId");
+                        .HasForeignKey("RutinaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rutina");
                 });
 
             modelBuilder.Entity("GestionEntrenamientoDeportivo.Models.RegistroProgreso", b =>
                 {
-                    b.HasOne("GestionEntrenamientoDeportivo.Models.Ejercicio", "Ejercicio")
+                    b.HasOne("GestionEntrenamientoDeportivo.Models.Ejercicio", "Ejercicios")
                         .WithMany("RegistrosProgreso")
                         .HasForeignKey("EjercicioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("GestionEntrenamientoDeportivo.Models.Usuario", "Usuario")
@@ -433,7 +437,7 @@ namespace GestionEntrenamientoDeportivo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Ejercicio");
+                    b.Navigation("Ejercicios");
 
                     b.Navigation("Usuario");
                 });

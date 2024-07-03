@@ -17,6 +17,7 @@ namespace GestionEntrenamientoDeportivo.Models
         public string? SecureUrl { get; set; }
         public string UsuarioId { get; set; }
         public Usuario? Usuario { get; set; }
+   
 
         [JsonIgnore]
         public List<Ejercicio> Ejercicios { get; set; }

@@ -47,7 +47,8 @@ namespace GestionEntrenamientoDeportivo.Controllers
                     await _userManager.AddToRoleAsync(user, "Usuario");
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    var token = GenerateJwtToken(user);
+                    var roles = await _userManager.GetRolesAsync(user); // Obtener los roles del usuario
+                    var token = GenerateJwtToken(user,roles);
                     return Ok(new { message = "Se registró un Usuario exitosamente", token });
                 }
 
@@ -65,7 +66,8 @@ namespace GestionEntrenamientoDeportivo.Controllers
             var user = await _userManager.FindByEmailAsync(model.CorreoElectronico);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Contrasena))
             {
-                var token = GenerateJwtToken(user);
+                var roles = await _userManager.GetRolesAsync(user); // Obtener los roles del usuario
+                var token = GenerateJwtToken(user, roles);
                 return Ok(new { message = "Inicio de sesión exitoso", token });
             }
 
@@ -73,15 +75,20 @@ namespace GestionEntrenamientoDeportivo.Controllers
         }
 
 
-        private string GenerateJwtToken(Usuario user)
+        private string GenerateJwtToken(Usuario user, IList<string> roles)
         {
-            
-            var claims = new[]
+            var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+    };
+
+            // Agregar los roles como claims
+            foreach (var role in roles)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -95,5 +102,6 @@ namespace GestionEntrenamientoDeportivo.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }

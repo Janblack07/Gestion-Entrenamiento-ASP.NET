@@ -9,32 +9,33 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Agregar servicios al contenedor
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
     {
-        Name="Authorization",
-        Description= "Enter the Bearer Authorization : `Bearer Genreated-JWT-Token`",
-        In= ParameterLocation.Header,
-        Type= SecuritySchemeType.ApiKey,
-        Scheme= "Bearer"
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization : `Bearer Generated-JWT-Token`",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
     });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        new OpenApiSecurityScheme
         {
-            Reference = new OpenApiReference
+            new OpenApiSecurityScheme
             {
-                Type = ReferenceType.SecurityScheme,
-                Id = JwtBearerDefaults.AuthenticationScheme
-            }
-        },
-        new string[] {}
-    }});
-
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
+                }
+            },
+            System.Array.Empty<string>()
+        }
+    });
 });
 
 // Configurar EF Core con SQL Server
@@ -80,7 +81,7 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar el pipeline de solicitudes HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -94,11 +95,13 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+// Middleware de autenticación y autorización
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-// Crear roles y usuario admin
+
+// Crear roles y usuario admin al inicio
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -109,8 +112,9 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-// Método para crear roles y usuario admin
-static async Task CreateRolesAndAdmin(RoleManager<IdentityRole> roleManager, UserManager<Usuario> userManager, IConfiguration configuration)
+
+// Método para crear roles y usuario admin si no existen
+async Task CreateRolesAndAdmin(RoleManager<IdentityRole> roleManager, UserManager<Usuario> userManager, IConfiguration configuration)
 {
     string[] roleNames = { "Admin", "Usuario" };
 
@@ -123,7 +127,6 @@ static async Task CreateRolesAndAdmin(RoleManager<IdentityRole> roleManager, Use
         }
     }
 
-    // Crear el usuario admin si no existe
     var adminEmail = configuration["AdminUser:Email"];
     var adminPassword = configuration["AdminUser:Password"];
 
@@ -136,7 +139,7 @@ static async Task CreateRolesAndAdmin(RoleManager<IdentityRole> roleManager, Use
             Email = adminEmail,
             Nombre = "Admin",
             Apellido = "Admin",
-            Edad = 30 // Puedes ajustar la edad según lo necesites
+            Edad = 30 // Ajusta según necesites
         };
 
         var result = await userManager.CreateAsync(user, adminPassword);

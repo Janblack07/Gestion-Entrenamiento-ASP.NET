@@ -20,6 +20,9 @@ namespace GestionEntrenamientoDeportivo.Models
         public string? VideoUrl { get; set; }
         public string? VideoSecureUrl { get; set; }
 
+        public int RutinaId { get; set; }
+        public Rutina? Rutina { get; set; }
+
 
         [JsonIgnore]
         public List<RegistroProgreso> RegistrosProgreso { get; set; }

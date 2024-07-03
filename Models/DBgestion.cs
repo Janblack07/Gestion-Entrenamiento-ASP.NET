@@ -31,7 +31,9 @@ namespace GestionEntrenamientoDeportivo.Models
 
             // Relación Rutina - Ejercicio
             modelBuilder.Entity<Rutina>()
-                .HasMany(r => r.Ejercicios);
+                .HasMany(r => r.Ejercicios)
+                .WithOne(rp => rp.Rutina)
+                .HasForeignKey(rp => rp.RutinaId);
 
             // Relación muchos a muchos Ejercicio - Categoria
             modelBuilder.Entity<CategoriaEjercicio>()
@@ -48,11 +50,13 @@ namespace GestionEntrenamientoDeportivo.Models
                 .HasForeignKey(ec => ec.CategoriaId);
 
             // Relación Ejercicio - RegistroProgreso
+      
             modelBuilder.Entity<Ejercicio>()
                 .HasMany(e => e.RegistrosProgreso)
-                .WithOne(rp => rp.Ejercicio)
-                .HasForeignKey(rp => rp.EjercicioId);
-        
-    }
+                .WithOne(rp => rp.Ejercicios)
+                .HasForeignKey(rp => rp.EjercicioId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+        }
     }
 }

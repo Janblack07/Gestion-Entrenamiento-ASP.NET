@@ -10,7 +10,7 @@ namespace GestionEntrenamientoDeportivo.Models
         public Usuario? Usuario { get; set; }
 
         public int EjercicioId { get; set; }
-        public Ejercicio? Ejercicio { get; set; }
+        public Ejercicio? Ejercicios { get; set; }
 
 
         public DateTime Fecha { get; set; }
