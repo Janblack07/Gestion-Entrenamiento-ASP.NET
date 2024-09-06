@@ -23,7 +23,7 @@ namespace GestionEntrenamientoDeportivo.Controllers
             _signInManager = signInManager;
             _configuration = configuration;
         }
-
+        //Registro de Usuarios
         [HttpPost]
         [Route("Registrar")]
         public async Task<ActionResult<Usuario>> RegistrarUsuario([FromBody] UsuarioRegistrado model)
