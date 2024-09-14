@@ -1,5 +1,4 @@
-﻿using CloudinaryDotNet.Actions;
-using GestionEntrenamientoDeportivo.Models;
+﻿using GestionEntrenamientoDeportivo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,36 +15,25 @@ namespace GestionEntrenamientoDeportivo.Controllers
         {
             _context = context;
         }
-        [HttpPost]
-        [Route("Inicializar")]
-        public async Task<IActionResult> InicializarCategorias()
+
+        // Este método ya no retorna IActionResult, solo realiza la inicialización
+        private async Task InicializarCategorias()
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return Unauthorized(new { message = "Acceso no autorizado. Debes estar autenticado." });
-            }
-
-            if (!User.IsInRole("Admin"))
-            {
-                return Unauthorized(new { message = "No tienes permisos suficientes para realizar esta acción." });
-            }
-
             string[] categoryNames = {
-        "pantorrilla: Ejercicio para trabajar los músculos de la pantorrilla.",
-        "izquios: Ejercicio para fortalecer los músculos isquiotibiales.",
-        "gluteos: Ejercicio enfocado en los músculos glúteos.",
-        "cuadriceps: Ejercicio para desarrollar los músculos del cuádriceps.",
-        "triceps: Ejercicio para fortalecer los músculos tríceps.",
-        "biceps: Ejercicio para desarrollar los músculos bíceps.",
-        "antebrazo: Ejercicio para fortalecer los músculos del antebrazo.",
-        "pecho alto: Ejercicio para trabajar la parte superior del músculo pectoral.",
-        "pecho bajo: Ejercicio para desarrollar la parte inferior del músculo pectoral.",
-        "pecho medio: Ejercicio para fortalecer la parte media del músculo pectoral.",
-        "espalda densidad: Ejercicio para aumentar la densidad muscular de la espalda.",
-        "espalda anchura: Ejercicio para ensanchar la espalda.",
-        "hombro: Ejercicio para fortalecer los músculos deltoides del hombro."
-    };
-
+                "pantorrilla: Ejercicio para trabajar los músculos de la pantorrilla.",
+                "izquios: Ejercicio para fortalecer los músculos isquiotibiales.",
+                "gluteos: Ejercicio enfocado en los músculos glúteos.",
+                "cuadriceps: Ejercicio para desarrollar los músculos del cuádriceps.",
+                "triceps: Ejercicio para fortalecer los músculos tríceps.",
+                "biceps: Ejercicio para desarrollar los músculos bíceps.",
+                "antebrazo: Ejercicio para fortalecer los músculos del antebrazo.",
+                "pecho alto: Ejercicio para trabajar la parte superior del músculo pectoral.",
+                "pecho bajo: Ejercicio para desarrollar la parte inferior del músculo pectoral.",
+                "pecho medio: Ejercicio para fortalecer la parte media del músculo pectoral.",
+                "espalda densidad: Ejercicio para aumentar la densidad muscular de la espalda.",
+                "espalda anchura: Ejercicio para ensanchar la espalda.",
+                "hombro: Ejercicio para fortalecer los músculos deltoides del hombro."
+            };
 
             foreach (var categoryInfo in categoryNames)
             {
@@ -60,7 +48,6 @@ namespace GestionEntrenamientoDeportivo.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Ok(new { message = "Categorías inicializadas exitosamente" });
         }
 
         [Authorize]
@@ -68,9 +55,18 @@ namespace GestionEntrenamientoDeportivo.Controllers
         [Route("VerCategorias")]
         public async Task<ActionResult<IEnumerable<Categoria>>> ListarCategorias()
         {
-           
+            // Verifica si el usuario está autenticado
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized(new { message = "Acceso no autorizado. Debes estar autenticado." });
+            }
+
+            // Inicializa las categorías si es necesario (accesible tanto para Admin como usuarios)
+            await InicializarCategorias();
+
+            // Ahora lista las categorías
             var categorias = await _context.Categorias.ToListAsync();
-            return Ok(new { message ="Todas las Categorias: ", categorias });
+            return Ok(new { message = "Todas las Categorias: ", categorias });
         }
     }
 }
